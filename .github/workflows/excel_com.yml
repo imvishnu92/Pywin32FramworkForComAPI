@@ -1,0 +1,27 @@
+name: Behave Excel COM Test
+
+on : [push, workflow_dispatch]
+
+jobs:
+  run-behave-excel:
+    runs-on: windows_latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name : Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Behave tests
+        run: behave
+
+      - name: Upload Excel artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: behave-excel-output
+          path: C:\Users\runneradmin\Documents\excel_behave.xlsx
