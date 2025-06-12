@@ -1,18 +1,31 @@
+import time
+import pythoncom
 import win32com.client
-import os
 
 def create_excel_file(text):
+
+    pythoncom.CoInitialize()
+
     excel = win32com.client.Dispatch("Excel.Application")
-    excel.Visible = False
 
-    workbook = excel.Workbooks.Add()
-    sheet = workbook.Sheets(1)
-    sheet.Cells(1, 1).Value = text
+    try:
 
-    file_path = r"C:\Users\runneradmin\Documents\excel_behave.xlsx"
-    workbook.SaveAs(file_path)
-    workbook.Close(False)
-    excel.Quit()
+        try:
+            excel.Visible = False
+        except AttributeError as ve:
+            print("Warning: Could not set Visible property:", ve)
 
-    return file_path
-📦
+        # Create and write to workbook
+        workbook = excel.Workbooks.Add()
+        sheet = workbook.Sheets(1)
+        sheet.Cells(1, 1).Value = text
+
+        filepath = r"C:\Users\ASUS\Documents\from_behave.xlsx"
+        workbook.SaveAs(filepath)
+        workbook.Close(SaveChanges=False)
+        excel.Quit()
+
+        return filepath
+
+    finally:
+        pythoncom.CoUninitialize()
